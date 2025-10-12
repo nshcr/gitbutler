@@ -110,9 +110,8 @@ pub async fn handle_after_edit() -> anyhow::Result<CursorHookOutput> {
     let hook_headers = input
         .edits
         .last()
-        .map(|edit| edit.generate_headers())
         .ok_or_else(|| anyhow::anyhow!("No hunk headers"))
-        .flatten()?;
+        .and_then(|edit| edit.generate_headers())?;
 
     let dir = input
         .workspace_roots
